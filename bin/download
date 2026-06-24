@@ -1,0 +1,8 @@
+#!/bin/bash -x
+QEMU_LEVEL=qemu-w64-setup-20260501.exe
+INNO_LEVEL=6_7_3
+export WINEPREFIX=$PWD/tmp
+#wget https://qemu.weilnetz.de/w64/${QEMU_LEVEL}
+#wine ${QEMU_LEVEL}
+wget https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe
+wine innosetup-6.7.3.exe

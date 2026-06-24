@@ -1,0 +1,20 @@
+#!/bin/bash
+export WINEPREFIX=$PWD/tmp
+IS_DIR=${WINEPREFIX}/drive_c/"Program Files (x86)"/"Inno Setup 6"
+QEMU_DIR=${WINEPREFIX}/drive_c/"Program Files"/qemu
+(
+cat ../scripts/skeleton-open.iss
+cd "${QEMU_DIR}"
+find . -type f -print |
+while read name
+do
+  echo "Source: \"{src}\\qemu\\${name}\"; DestDir: \"{app}\\${name%/*}\"; Flags: ignoreversion external"
+done
+echo "Source: \"{src}\\fr2.iso\"; DestDir: \"{app}\\..\\QemuSaver\"; Flags: ignoreversion external"
+echo "Source: \"{src}\\extras\\fr2.scr\"; DestDir: \"{sys}\"; Flags: ignoreversion external"
+echo "Source: \"{src}\\extras\\fr2n.scr\"; DestDir: \"{sys}\"; Flags: ignoreversion external"
+echo "; NOTE: Don't use "Flags: ignoreversion" on any shared system files"
+) > ../scripts/tmp.iss
+wine "${IS_DIR}/ISCC.exe" ../scripts/tmp.iss
+rm ../scripts/tmp.iss
+wine "${IS_DIR}/ISCC.exe" ../scripts/gk2.iss
